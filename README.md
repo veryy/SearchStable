@@ -2,6 +2,8 @@
 
 适用于 **OPPO / 一加 ColorOS 全局搜索** 的轻量 LSPosed / Xposed 模块，防止下拉搜索时“应用建议”图标突然刷新、换位。
 
+公开版包名：`io.github.veryy.searchstable`。早期本地版 `dev.operit.searchstable` 与公开版不要同时启用。
+
 ## 下载与使用
 
 [下载 APK（GitHub Releases）](https://github.com/veryy/SearchStable/releases)
