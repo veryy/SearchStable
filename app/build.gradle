@@ -2,7 +2,7 @@ plugins { id 'com.android.application' }
 android {
  namespace 'dev.operit.searchstable'
  compileSdk 35
- defaultConfig { applicationId 'io.github.veryy.searchstable'; minSdk 26; targetSdk 34; versionCode 4; versionName '0.3.1' }
+ defaultConfig { applicationId 'io.github.veryy.searchstable'; minSdk 26; targetSdk 34; versionCode 5; versionName '0.4' }
  compileOptions { sourceCompatibility JavaVersion.VERSION_1_8; targetCompatibility JavaVersion.VERSION_1_8 }
  buildTypes { release { minifyEnabled false } }
 }

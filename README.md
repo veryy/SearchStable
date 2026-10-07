@@ -1,55 +1,53 @@
-# SearchStable · 搜索建议防跳动
+# SearchStable
 
-适用于 **OPPO / 一加 ColorOS 全局搜索** 的轻量 LSPosed / Xposed 模块，防止下拉搜索时“应用建议”图标突然刷新、换位。
+OPPO / 一加全局搜索「应用建议」防跳动模块。
 
-公开版包名：`io.github.veryy.searchstable`。早期本地版 `dev.operit.searchstable` 与公开版不要同时启用。
+下拉打开搜索，刚准备点一个应用，图标却刷新换了位置。这个模块就是用来解决这个问题的。
 
-## 下载与使用
+空输入时固定当前显示的应用建议，停留期间不再换位。输入关键词后立即解除锁定，允许搜索结果正常更新；清空关键词后重新等待并锁定建议。离开搜索后解除锁定，不会一直禁用后台刷新，也不会把推荐列表永久固定。
 
-[下载 APK（GitHub Releases）](https://github.com/veryy/SearchStable/releases)
+## 使用
 
-1. 安装 APK，需要支持传统 Xposed API 的 LSPosed / Vector 等框架。
-2. 启用模块，作用域只勾选 **全局搜索**（`com.heytap.quicksearchbox`）。
-3. 强制停止全局搜索后重新打开，或重启手机。
-4. 模块没有设置界面；不需要勾选桌面或系统框架。
+1. 在 [Releases](https://github.com/veryy/SearchStable/releases/latest) 下载并安装 APK。
+2. 在 LSPosed / Vector 中启用模块，作用域只勾选 **全局搜索**（`com.heytap.quicksearchbox`）。
+3. 强行停止全局搜索后重新打开，或重启手机。
 
-## 行为
+没有设置界面，启用即可。不用勾选桌面和系统框架。
 
-- 每次打开搜索，锁定第一份非空应用建议列表。
-- 当前停留期间阻止列表替换及单项数据更新，并保护延迟重绘使用的列表顺序。
-- 再次打开时，已显示的非空缓存列表同样立即锁定。
-- 搜索 Activity 暂停时解锁，后台刷新不被全局禁止。
+## 支持范围
 
-**注意：解锁以 SearchHomeActivity 的 onPause 为边界；打开其他页面也会结束本轮锁定。锁定期间单项更新也被阻止，下载状态等可能暂不更新。下次打开允许显示当时缓存，并非保证每次都强制联网取最新列表。**
+适用于 OPPO / 一加的 ColorOS 全局搜索。
 
-## 兼容性
+目前只测试了：
 
-定位 OPPO / 一加 ColorOS 全局搜索，不是所有 Android 搜索工具的通用模块。
+- ColorOS 16.1 / Android 16
+- 全局搜索 11.63.4.20
 
-已实测：ColorOS 16.1 / Android 16，全局搜索 **11.63.4.20**；v0.3 经实际用户反馈“可以，还不错”。其他 OPPO / 一加机型和版本未验证。
+其他版本不保证有效。搜索应用更新后也可能失效。
 
-模块依赖应用内部类与方法；系统或搜索应用升级后可能失效。遇到异常先停用模块并重启搜索，再在 Issues 提交系统、机型、搜索版本和脱敏后的模块日志。
+## 注意
 
-## 原理
+- 切到其他页面会解除本轮锁定。
+- 锁定期间，建议卡片里的下载状态等信息也可能暂时不更新。
+- 再次打开时可以显示已有缓存，不代表每次都会获取最新推荐。
+- 从早期 `dev.operit.searchstable` 版换到公开版时，请先停用旧版，不要同时启用两个版本。
 
-Hook `NewRecommendAppAdapter.P/J` 阻止当前会话的数据替换，保护 `B/E` 延迟重绘以及 `onBindViewHolder` 的列表顺序，通过 Activity 生命周期划分会话。不修改系统 APK，不关闭推荐数据源。
+遇到问题可以提 [Issue](https://github.com/veryy/SearchStable/issues)，附上机型、系统版本、全局搜索版本和模块日志。发日志前记得删掉个人信息；搜索异常时先停用模块，再重启搜索。
 
-快照是列表级浅拷贝，不宣称能冻结所有图标位图或实体内部属性。源码不包含反编译的厂商代码。
+## LSPosed 仓库
+
+[收录申请](https://github.com/Xposed-Modules-Repo/submission/issues/2072)已提交，等待审核。目前请从 GitHub Releases 下载。
 
 ## 构建
 
-JDK 17、Android SDK 35、Gradle 8.9：
+JDK 17 / Android SDK 35 / Gradle 8.9，使用传统 Xposed API 82。
 
 ```sh
 gradle :app:assembleDebug
 ```
 
-依赖传统 Xposed API 82（compileOnly）。也可在 Actions 页面运行 Build，下载测试 APK。CI debug 签名与首个真机调试 Release 的签名不保证相同，不能混装更新；正式发布应固定并私下保管签名密钥。
-
-## LSPosed 仓库
-
-源码公开不等于已收录。Xposed-Modules-Repo 收录后，支持该源的管理器才能搜索和下载；以审核结果为准。
+也可以从 GitHub Actions 下载测试构建。Actions 与 Release 的 APK 签名可能不同，无法直接覆盖安装。
 
 ## License
 
-MIT。非 OPPO / OnePlus 官方项目，与厂商无关联。请自行承担系统修改风险。
+[MIT](LICENSE)。非 OPPO / 一加官方项目。
